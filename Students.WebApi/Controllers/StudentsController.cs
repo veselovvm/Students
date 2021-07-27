@@ -25,21 +25,19 @@ namespace Students.WebApi.Controllers
         [HttpGet("{id}", Name = "GetStudent")]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var student = await _studentsServices.GetStudentAsync(id);
+            var dbStudent = await _studentsServices.GetStudentAsync(id);
 
-            if (student == null)
-            {
+            if (dbStudent == null)
                 return NotFound();
-            }
 
-            return Ok(student);
+            return Ok(dbStudent);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateStudentAsync(Student student)
         {
-            var newStudent = await _studentsServices.CreateStudentAsync(student);
-            return CreatedAtRoute(nameof(GetStudent), new { newStudent.Id}, newStudent);
+            var dbStudent = await _studentsServices.CreateStudentAsync(student);
+            return CreatedAtRoute(nameof(GetStudent), new { dbStudent.Id}, dbStudent);
         }
 
         [HttpDelete]
@@ -52,7 +50,11 @@ namespace Students.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> EditStudent(Student student)
         {
-            return Ok(await _studentsServices.EditStudentAsync(student));
+            var dbStudent = await _studentsServices.EditStudentAsync(student);
+            if (dbStudent == null)
+                return NotFound();
+            
+            return Ok(dbStudent);
         }
     }
 }

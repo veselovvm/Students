@@ -45,7 +45,9 @@ namespace Students.Core
             Student dbStudent = await _context.Students.Include(p => p.Progress)
                 .SingleOrDefaultAsync(s => s.Id == student.Id);
 
-            //var dbStudent = _context.Students.First(s => s.Id == student.Id);
+            if (dbStudent == null)
+                return null;
+
             dbStudent.Fio = student.Fio;
             dbStudent.Birthday = student.Birthday;
             dbStudent.Progress = student.Progress;
@@ -64,7 +66,7 @@ namespace Students.Core
 
         public async Task<List<Student>> GetStudentsAsync()
         {
-            var students = _context.Students.Include(c => c.Progress);
+            var students = _context.Students.Include(c => c.Progress).AsNoTracking();
             return await students.ToListAsync();
         }
     }
